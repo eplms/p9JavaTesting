@@ -34,7 +34,7 @@ public class CompteComptableTest {
 		
 		//Assert
 		// Vérifier que le compte renvoyé est bien le compte attendu
-		assertEquals("Client", CompteComptable.getByNumero(listCompteComptable,411).getLibelle());
+		assertEquals(client, CompteComptable.getByNumero(listCompteComptable,411));
 		
 		listCompteComptable.clear();
 		CompteComptable caisse=new CompteComptable();
@@ -52,7 +52,7 @@ public class CompteComptableTest {
 		achat.setLibelle("Achats");
 		listCompteComptable.add(achat);
 		
-		assertNotEquals("Achats", CompteComptable.getByNumero(listCompteComptable,701).getLibelle());
+		assertNotEquals(achat, CompteComptable.getByNumero(listCompteComptable,701));
 
 	}
 
