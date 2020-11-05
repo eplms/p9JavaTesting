@@ -1,5 +1,6 @@
 package com.dummy.myerp.business.impl.manager;
 
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -15,12 +16,12 @@ public class ComptabiliteManagerImplTest {
 
     private ComptabiliteManagerImpl manager = new ComptabiliteManagerImpl();
 
-
     @Test
     public void checkEcritureComptableUnit() throws Exception {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setReference("AC-2020/00001");
         vEcritureComptable.setDate(new Date());
         vEcritureComptable.setLibelle("Libelle");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
@@ -70,5 +71,6 @@ public class ComptabiliteManagerImplTest {
                                                                                  null));
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
-
+    
+   
 }

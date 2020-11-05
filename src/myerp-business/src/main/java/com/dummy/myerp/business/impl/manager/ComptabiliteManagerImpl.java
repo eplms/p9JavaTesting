@@ -74,6 +74,10 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 4.  Enregistrer (insert/update) la valeur de la séquence en persitance
                     (table sequence_ecriture_comptable)
          */
+    	
+    	//String listEcritureCompatble=getListEcritureComptable();
+    	
+    	//pEcritureComptable.setReference(pReference);
     }
 
     /**
@@ -134,6 +138,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+      
+        
     }
 
 
