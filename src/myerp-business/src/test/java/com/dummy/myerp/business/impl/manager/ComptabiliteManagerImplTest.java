@@ -73,7 +73,7 @@ public class ComptabiliteManagerImplTest {
     }
     
     @Test(expected=FunctionalException.class)
-    public void chekcEcxritureComptableUnitRG5CodeJournal()throws Exception{
+    public void checkEcritureComptableUnitRG5CodeJournal()throws Exception{
     	EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));

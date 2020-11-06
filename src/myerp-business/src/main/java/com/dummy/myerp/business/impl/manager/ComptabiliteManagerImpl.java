@@ -138,6 +138,10 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+        if(!pEcritureComptable.getReference().substring(0,2).equals(pEcritureComptable.getJournal().getCode()))  {
+    	  throw new FunctionalException(
+    			  "Le code journal de la référence doit être identique au journal de l'écriture est passée.");
+        }
       
         
     }
