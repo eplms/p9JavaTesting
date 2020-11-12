@@ -5,6 +5,7 @@ import java.util.List;
 import com.dummy.myerp.model.bean.comptabilite.CompteComptable;
 import com.dummy.myerp.model.bean.comptabilite.EcritureComptable;
 import com.dummy.myerp.model.bean.comptabilite.JournalComptable;
+import com.dummy.myerp.model.bean.comptabilite.SequenceEcritureComptable;
 import com.dummy.myerp.technical.exception.NotFoundException;
 
 
@@ -26,6 +27,27 @@ public interface ComptabiliteDao {
      */
     List<JournalComptable> getListJournalComptable();
 
+    // ==================== SequenceEcritureComptable ====================
+    
+    /**
+     * Renvoie la Séquence Ecriture Comptable d'un journal pour une Année
+     * @return {@link SequenceEcritureComptable}
+     */
+    SequenceEcritureComptable getSequenceEcritureComptableByCodeJournalAndByAnnee(String pCodeJournal, Integer pAnnee);
+    
+    /**
+     * crée une nouvelle Séquence d'Ecriture Comptable 
+     * @param {@link SequenceEcritureComptable}
+     */
+    void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptbale);
+    
+    /**
+     * met à jour la  Séquence d'Ecriture Comptable 
+     * @param {@link SequenceEcritureComptable}
+     */
+    void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptbale);
+    
+    
 
     // ==================== EcritureComptable ====================
 

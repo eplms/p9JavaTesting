@@ -2,7 +2,6 @@ package com.dummy.myerp.business.impl.manager;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -17,6 +16,7 @@ import com.dummy.myerp.model.bean.comptabilite.CompteComptable;
 import com.dummy.myerp.model.bean.comptabilite.EcritureComptable;
 import com.dummy.myerp.model.bean.comptabilite.JournalComptable;
 import com.dummy.myerp.model.bean.comptabilite.LigneEcritureComptable;
+import com.dummy.myerp.model.bean.comptabilite.SequenceEcritureComptable;
 import com.dummy.myerp.technical.exception.FunctionalException;
 import com.dummy.myerp.technical.exception.NotFoundException;
 
@@ -77,9 +77,30 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                     (table sequence_ecriture_comptable)
          */
     	
-    	//String listEcritureCompatble=getListEcritureComptable();
-    	
-    	//pEcritureComptable.setReference(pReference);
+    	//Récupérer le journal concerné pour l'écriture comptable dans pEcritureComptable
+    	String pCodeJournal=pEcritureComptable.getJournal().getCode();
+    	//Récupération de l'année concernée par l'écriture comptable dans pEcritureComptable
+    	Calendar calendar=Calendar.getInstance();
+        calendar.setTime(pEcritureComptable.getDate());
+        int pAnnee =calendar.get(Calendar.YEAR);
+        
+        SequenceEcritureComptable pSequenceEcritureComptable;
+        
+        //Remonter depuis la persistence la dernière valeur de la séquence du journal
+    	try {
+    		pSequenceEcritureComptable=getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByCodeJournalAndByAnnee(pCodeJournal, pAnnee);
+    		pSequenceEcritureComptable.setDerniereValeur(pSequenceEcritureComptable.getDerniereValeur()+1);
+    		getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(pSequenceEcritureComptable);
+    		
+    	} catch(NullPointerException e) {
+    		pSequenceEcritureComptable=new SequenceEcritureComptable();
+    		pSequenceEcritureComptable.setDerniereValeur(1);
+    		pSequenceEcritureComptable.setAnnee(pAnnee);
+    		pSequenceEcritureComptable.setCodeJournal(pCodeJournal);
+    		getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(pSequenceEcritureComptable);
+    	} 
+    	//Mise à jour de la référence avec le bon numéro de séquence incluant 5 digits
+		pEcritureComptable.setReference(pCodeJournal+"-"+pAnnee+"/"+String.format("%05d",pSequenceEcritureComptable.getDerniereValeur()));
     }
 
     /**
