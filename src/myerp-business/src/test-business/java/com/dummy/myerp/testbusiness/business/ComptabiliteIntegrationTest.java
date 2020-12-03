@@ -18,12 +18,11 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 	public void test1() {
 		assertNotNull(getBusinessProxy().getComptabiliteManager().getListCompteComptable());
 	}
-
+	
+	
 	@Test
-	public void addReferenceTestShouldSetReferenceToEcritureComptable() {
-		// ARRANGE
-
-		// Initialisation d'une écriture comptable sans référence
+	public void addReferenceTestShouldSetReferenceNotNullToEcritureComptable() {
+		// ARRANGE : Initialisation d'une écriture comptable sans référence
 		EcritureComptable vEcritureComptable = new EcritureComptable();
 		vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
 		vEcritureComptable.setDate(new Date());
@@ -42,5 +41,8 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 		// Vérification que la référence a bien été ajoutée à l'écriture comptable
 		assertNotNull(vEcritureComptable.getReference());
 	}
-
+	
+	
+	
+	
 }
