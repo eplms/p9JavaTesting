@@ -34,8 +34,8 @@
         <property name="SQLgetSequenceEcritureComptableByCodeJournalAndByAnnee">
             <value>
                 SELECT * FROM myerp.sequence_ecriture_comptable
-                WHERE code_journal = :code_journal
-                AND annee= :annee
+                WHERE journal_code = :journal_code
+                AND annee = :annee
             </value>
         </property>
         <property name="SQLgetEcritureComptableByRef">
