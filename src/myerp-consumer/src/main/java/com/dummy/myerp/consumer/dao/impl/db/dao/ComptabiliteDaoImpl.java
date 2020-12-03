@@ -70,11 +70,23 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
     }
     
     @Override
-    public SequenceEcritureComptable getSequenceEcritureComptableByCodeJournalAndByAnnee(String pCodeJournal, Integer pAnnee) {
-    	JdbcTemplate vJdbcTemplate = new JdbcTemplate(this.getDataSource(DataSourcesEnum.MYERP));
+    public SequenceEcritureComptable getSequenceEcritureComptableByCodeJournalAndByAnnee(String pCodeJournal, Integer pAnnee) throws NotFoundException {
+   	 	NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
     	SequenceEcritureComptableRM vRM=new SequenceEcritureComptableRM();
-    	SequenceEcritureComptable vBean=(SequenceEcritureComptable) vJdbcTemplate.query(SQLgetSequenceEcritureComptableByCodeJournalAndByAnnee,vRM);
+    	MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
+    	
+    	vSqlParams.addValue("journal_code", pCodeJournal);
+        vSqlParams.addValue("annee", pAnnee);
+
+        SequenceEcritureComptable vBean;
+     try {   
+    	vBean=(SequenceEcritureComptable) vJdbcTemplate.queryForObject(SQLgetSequenceEcritureComptableByCodeJournalAndByAnnee,vSqlParams,vRM);
+     	} catch (EmptyResultDataAccessException vEx) {
+     		throw new NotFoundException("SequenceEcritureComptable inexistante");
+     	}
     	return vBean;
+    	
+          
     	
     }
     
@@ -86,7 +98,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
     
     @Override
     public void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) {
-    	JdbcTemplate vJdbcTemplate = new JdbcTemplate(this.getDataSource(DataSourcesEnum.MYERP));
+    	NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(this.getDataSource(DataSourcesEnum.MYERP));
     	MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
     	
     	vSqlParams.addValue("journal_code", pSequenceEcritureComptable.getCodeJournal());

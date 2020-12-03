@@ -32,8 +32,9 @@ public interface ComptabiliteDao {
     /**
      * Renvoie la Séquence Ecriture Comptable d'un journal pour une Année
      * @return {@link SequenceEcritureComptable}
+     * @throws NotFoundException 
      */
-    SequenceEcritureComptable getSequenceEcritureComptableByCodeJournalAndByAnnee(String pCodeJournal, Integer pAnnee);
+    SequenceEcritureComptable getSequenceEcritureComptableByCodeJournalAndByAnnee(String pCodeJournal, Integer pAnnee) throws NotFoundException;
     
     /**
      * crée une nouvelle Séquence d'Ecriture Comptable 

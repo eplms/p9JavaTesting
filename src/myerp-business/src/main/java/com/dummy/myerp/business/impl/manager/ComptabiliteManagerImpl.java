@@ -89,7 +89,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 			pSequenceEcritureComptable.setDerniereValeur(pSequenceEcritureComptable.getDerniereValeur() + 1);
 			getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(pSequenceEcritureComptable);
 
-		} catch (NullPointerException e) {
+		} catch (NotFoundException e) {
 			pSequenceEcritureComptable = new SequenceEcritureComptable();
 			pSequenceEcritureComptable.setDerniereValeur(1);
 			pSequenceEcritureComptable.setAnnee(pAnnee);
