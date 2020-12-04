@@ -79,24 +79,5 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 		// ASSERT : Vérification que la référence a bien été ajoutée à l'écriture comptable
 		assertEquals("00002",vEcritureComptable.getReference().substring(8));
 	}
-	
-	
-	/*
-	@Test()
-	public void checkEcritureComptableTestIntegration() throws FunctionalException {
-		// ARRANGE : Initialisation d'une écriture comptable
-		EcritureComptable vEcritureComptable=new EcritureComptable();
-		vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
-		vEcritureComptable.setDate(new Date());
-		vEcritureComptable.setLibelle("Libelle");
-		vEcritureComptable.getListLigneEcriture()
-				.add(new LigneEcritureComptable(new CompteComptable(1), null, new BigDecimal(123), null));
-		vEcritureComptable.getListLigneEcriture()
-				.add(new LigneEcritureComptable(new CompteComptable(2), null, null, new BigDecimal(123)));
-		getBusinessProxy().getComptabiliteManager().addReference(vEcritureComptable);
-		
-		//ACT
-		getBusinessProxy().getComptabiliteManager().checkEcritureComptable(vEcritureComptable);
-	}
-	*/
+
 }
