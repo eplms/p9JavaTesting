@@ -71,11 +71,9 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 		 * la séquence en persitance (table sequence_ecriture_comptable)
 		 */
 
-		// Récupérer le journal concerné pour l'écriture comptable dans
-		// pEcritureComptable
+		// Récupérer le journal concerné par l'écriture comptable dans pEcritureComptable
 		String pCodeJournal = pEcritureComptable.getJournal().getCode();
-		// Récupération de l'année concernée par l'écriture comptable dans
-		// pEcritureComptable
+		// Récupération de l'année concernée par l'écriture comptable dans pEcritureComptable
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(pEcritureComptable.getDate());
 		int pAnnee = calendar.get(Calendar.YEAR);
@@ -86,7 +84,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 		try {
 			pSequenceEcritureComptable = getDaoProxy().getComptabiliteDao()
 					.getSequenceEcritureComptableByCodeJournalAndByAnnee(pCodeJournal, pAnnee);
-			pSequenceEcritureComptable.setDerniereValeur(pSequenceEcritureComptable.getDerniereValeur() + 1);
+			pSequenceEcritureComptable.setDerniereValeur(pSequenceEcritureComptable.getDerniereValeur()+ 1);
 			getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(pSequenceEcritureComptable);
 
 		} catch (NotFoundException e) {
