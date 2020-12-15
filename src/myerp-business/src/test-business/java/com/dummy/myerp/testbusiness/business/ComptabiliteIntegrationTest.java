@@ -10,11 +10,14 @@ import com.dummy.myerp.model.bean.comptabilite.LigneEcritureComptable;
 import com.dummy.myerp.technical.exception.FunctionalException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class ComptabiliteIntegrationTest extends BusinessTestCase {
 	
@@ -210,8 +213,117 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 	}
 	
 	
+	//Test de insertEcritureComptable avec une écriture comptable correcte
+	@Test
+	public void insertEcritureComptableShouldWriteEcritureComptable() throws FunctionalException{
+		//ARRANGE : Initilisation d'une écriture comptable
+		EcritureComptable vEcritureComptable = new EcritureComptable();
+		vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+		vEcritureComptable.setDate(new Date());
+		manager.addReference(vEcritureComptable);
+		vEcritureComptable.setLibelle("Achat de prestation");
+		vEcritureComptable.getListLigneEcriture()
+				.add(new LigneEcritureComptable(new CompteComptable(512), null, new BigDecimal(102), null));
+		vEcritureComptable.getListLigneEcriture()
+				.add(new LigneEcritureComptable(new CompteComptable(411), null, null, new BigDecimal(102)));
+		
+		
+		//ACT : Utilisation de insertEcritureComptable
+		manager.insertEcritureComptable(vEcritureComptable);
+		
+		//ASSERT : verification de l'écriture comptable en base de données
+		/* On ne peut pas comparer les objets car l'objet avant l'écriture en base n'a pas d'id alors que celui 
+		 * qui est récupéré en base pour vérification en un qui lui a été attribué autamatiquement par la base.
+		 * Ce qui identifie l'écriture comptable est alors la référence
+		 * */
+		Boolean vEcritureComptablePresenteEnBase=false;
+		List<EcritureComptable> listEcritureComptable=manager.getListEcritureComptable();
+		for(EcritureComptable ecritureComptable: listEcritureComptable) {
+			if(ecritureComptable.getReference().equals(vEcritureComptable.getReference())) {
+				vEcritureComptablePresenteEnBase=true;
+			}
+		}
+		assertTrue(vEcritureComptablePresenteEnBase);
+
+		
+		//ASSERT INADAPTES : Avant l'insert, l'écriture comptable n'a pas d'Id
+		//assertTrue(manager.getListEcritureComptable().contains(vEcritureComptable));
+		//assertThat(manager.getListEcritureComptable(),hasItem(vEcritureComptable));
+		
+	}
 	
 	
+	//Test de insertEcritureComptable avec une écriture comptable incorrecte
+		@Test(expected=NullPointerException.class)
+		public void insertEcritureComptableShouldThrowNullPointerExceptionWhenEcritureComptableIsIncorrect() throws NullPointerException, FunctionalException{
+			//ARRANGE : Initilisation d'une écriture comptable n'ayant pas de référence
+			EcritureComptable vEcritureComptable = new EcritureComptable();
+			vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+			vEcritureComptable.setDate(new Date());
+			vEcritureComptable.setLibelle("Achat de prestation");
+			vEcritureComptable.getListLigneEcriture()
+					.add(new LigneEcritureComptable(new CompteComptable(512), null, new BigDecimal(102), null));
+			vEcritureComptable.getListLigneEcriture()
+					.add(new LigneEcritureComptable(new CompteComptable(411), null, null, new BigDecimal(102)));
+			
+			
+			//ACT : Utilisation de insertEcritureComptable
+			manager.insertEcritureComptable(vEcritureComptable);
+
+		}
+	
+	
+	
+	//Test de upDateEcritureComptable
+	@Test
+	public void updateEcritureComptableShouldUpdateEcritureComptable() throws FunctionalException {
+		//ARRANGE : Initilisation d'une écriture comptable modifiée à partir d'une écriture comptable existante
+		// Le libellé de la facture a été modifié
+			EcritureComptable vEcritureComptable = new EcritureComptable();
+			vEcritureComptable.setId(-3);
+			vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
+			Calendar cal = Calendar.getInstance();
+			cal.set(2016,12,29);
+			Date date = cal.getTime();
+			vEcritureComptable.setDate(date);
+			vEcritureComptable.setReference("BQ-2016/003");
+			vEcritureComptable.setLibelle("Paiement Facture Emmanuel");
+			vEcritureComptable.getListLigneEcriture()
+					.add(new LigneEcritureComptable(new CompteComptable(401), null, new BigDecimal(52.74), null));
+			vEcritureComptable.getListLigneEcriture()
+					.add(new LigneEcritureComptable(new CompteComptable(512), null, null, new BigDecimal(52.74)));
+			
+		//ACT
+			manager.updateEcritureComptable(vEcritureComptable);
+			
+		//ASSERT
+			EcritureComptable vEcritureComptablePresenteEnBase = null;
+			List<EcritureComptable> listEcritureComptable=manager.getListEcritureComptable();
+			for(EcritureComptable ecritureComptable: listEcritureComptable) {
+				if(ecritureComptable.getId().equals(vEcritureComptable.getId())) {
+					vEcritureComptablePresenteEnBase=ecritureComptable;
+				}
+			}
+			assertEquals("Paiement Facture Emmanuel",vEcritureComptablePresenteEnBase.getLibelle());	
+	}
+	
+	
+	//Test de DeleteEcritureComptable
+	@Test
+	public void deleteEcritureComptableShouldDeleteEcritureComptable() {			
+			//ACT : suppression de l'écriture comptable en base ayant l'id -5
+			manager.deleteEcritureComptable(-5);
+		
+			//ASSERT : vérification de la suppression
+			Boolean vEcritureComptablePresenteEnBase=false;
+			List<EcritureComptable> listEcritureComptable=manager.getListEcritureComptable();
+			for(EcritureComptable ecritureComptable: listEcritureComptable) {
+				if(ecritureComptable.getId().equals(-5)) {
+					vEcritureComptablePresenteEnBase=true;
+				}
+			}
+			assertFalse(vEcritureComptablePresenteEnBase);	
+	}
 	
 	
 }
