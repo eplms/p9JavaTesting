@@ -58,7 +58,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 	 */
 	// TODO à tester
 	@Override
-	public synchronized void addReference(EcritureComptable pEcritureComptable) {
+	public synchronized void addReference(EcritureComptable pEcritureComptable){
 		// TODO à implémenter
 		// Bien se réferer à la JavaDoc de cette méthode !
 		/*
@@ -85,14 +85,28 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 			pSequenceEcritureComptable = getDaoProxy().getComptabiliteDao()
 					.getSequenceEcritureComptableByCodeJournalAndByAnnee(pCodeJournal, pAnnee);
 			pSequenceEcritureComptable.setDerniereValeur(pSequenceEcritureComptable.getDerniereValeur()+ 1);
-			getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(pSequenceEcritureComptable);
+			TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
+			try {
+				getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(pSequenceEcritureComptable);
+				getTransactionManager().commitMyERP(vTS);
+				vTS = null;
+			}finally{
+				getTransactionManager().rollbackMyERP(vTS);
+			}
 
 		} catch (NotFoundException e) {
 			pSequenceEcritureComptable = new SequenceEcritureComptable();
 			pSequenceEcritureComptable.setDerniereValeur(1);
 			pSequenceEcritureComptable.setAnnee(pAnnee);
 			pSequenceEcritureComptable.setCodeJournal(pCodeJournal);
-			getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(pSequenceEcritureComptable);
+			TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
+			try {
+				getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(pSequenceEcritureComptable);
+				getTransactionManager().commitMyERP(vTS);
+				vTS = null;
+			}finally {
+				getTransactionManager().rollbackMyERP(vTS);
+			}
 		}
 		// Mise à jour de la référence avec le bon numéro de séquence incluant 5 digits
 		pEcritureComptable.setReference(pCodeJournal + "-" + pAnnee + "/"
