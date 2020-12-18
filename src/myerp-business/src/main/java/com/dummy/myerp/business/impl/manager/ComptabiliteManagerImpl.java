@@ -228,7 +228,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 		try {
 			getDaoProxy().getComptabiliteDao().insertEcritureComptable(pEcritureComptable);
 			getTransactionManager().commitMyERP(vTS);
-			vTS = null;
+			vTS = null;	
 		} finally {
 			getTransactionManager().rollbackMyERP(vTS);
 		}
@@ -239,7 +239,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 	 */
 	@Override
 	public void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException {
-		this.checkEcritureComptable(pEcritureComptable);
+		//checkEcritureComptable impossible car inclut checkEcritureComptableContext qui ne peut pas être pris en compte pour l'update
+		this.checkEcritureComptableUnit(pEcritureComptable);
 		TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
 		try {
 			getDaoProxy().getComptabiliteDao().updateEcritureComptable(pEcritureComptable);

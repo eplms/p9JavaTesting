@@ -26,7 +26,7 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 	
 	@Test
 	public void test1() {
-		assertNotNull(getBusinessProxy().getComptabiliteManager().getListCompteComptable());
+		assertNotNull(manager.getListCompteComptable());
 	}
 	
 	//Test avec une écriture comptable dans un journal pour une année qui n'existe pas en base
@@ -44,7 +44,7 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 				.add(new LigneEcritureComptable(new CompteComptable(2), null, null, new BigDecimal(123)));
 
 		// ACT : L'écriture comptable est passée dans la méthode addReference
-		getBusinessProxy().getComptabiliteManager().addReference(vEcritureComptable);
+		manager.addReference(vEcritureComptable);
 		// ASSERT : Vérification que la référence a bien été ajoutée à l'écriture comptable
 		assertNotNull(vEcritureComptable.getReference());
 	}
@@ -67,7 +67,7 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 				.add(new LigneEcritureComptable(new CompteComptable(2), null, null, new BigDecimal(123)));
 
 		// ACT : L'écriture comptable est passée dans la méthode addReference
-		getBusinessProxy().getComptabiliteManager().addReference(vEcritureComptable);
+		manager.addReference(vEcritureComptable);
 		// ASSERT : Vérification que la référence a bien été ajoutée à l'écriture comptable
 		assertEquals("AC-2016/00041",vEcritureComptable.getReference());
 	}
@@ -87,7 +87,7 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 				.add(new LigneEcritureComptable(new CompteComptable(2), null, null, new BigDecimal(123)));
 
 		// ACT : L'écriture comptable est passée dans la méthode addReference
-		getBusinessProxy().getComptabiliteManager().addReference(vEcritureComptable);
+		manager.addReference(vEcritureComptable);
 		// ASSERT : Vérification que la référence a bien été ajoutée à l'écriture comptable
 		assertEquals("VE-2020/00001",vEcritureComptable.getReference());
 	}
@@ -166,6 +166,7 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 		//ARRANGE : Initialisation d'une écriture ne comportant pas de référence
 		EcritureComptable vEcritureComptable = new EcritureComptable();
 		vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+		//Si référence null alors NullPointerException
 		vEcritureComptable.setReference("");
 		vEcritureComptable.setDate(new Date());
 		vEcritureComptable.setLibelle("Achat de papeterie");
@@ -196,12 +197,13 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 	}
 	
 	// Test de checkEcritureComptable avec une écriture comptable ne comportant pas de référence
-	@Test(expected=NullPointerException.class)
-	public void checkEcritureComptableShouldThrowExceptionWhenReferenceEcritureComptableIsNull() throws Exception{
+	@Test(expected=FunctionalException.class)
+	public void checkEcritureComptableShouldThrowExceptionWhenReferenceEcritureComptableIsNull() throws FunctionalException{
 		//ARRANGE : Initialisation d'une écriture ne comportant pas de référence
 		EcritureComptable vEcritureComptable = new EcritureComptable();
 		vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
-		vEcritureComptable.setReference(null);
+		// Si reference null alors NullPointerException
+		vEcritureComptable.setReference("");
 		vEcritureComptable.setDate(new Date());
 		vEcritureComptable.setLibelle("Achat de papeterie");
 		vEcritureComptable.getListLigneEcriture()
@@ -254,13 +256,14 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 	
 	
 	//Test de insertEcritureComptable avec une écriture comptable incorrecte
-		@Test(expected=NullPointerException.class)
-		public void insertEcritureComptableShouldThrowNullPointerExceptionWhenEcritureComptableIsIncorrect() throws NullPointerException, FunctionalException{
-			//ARRANGE : Initilisation d'une écriture comptable n'ayant pas de référence
+		@Test(expected=FunctionalException.class)
+		public void insertEcritureComptableShouldThrowNullPointerExceptionWhenEcritureComptableIsIncorrect() throws FunctionalException{
+			//ARRANGE : Initilisation d'une écriture comptable n'ayant pas de libellé
 			EcritureComptable vEcritureComptable = new EcritureComptable();
 			vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
 			vEcritureComptable.setDate(new Date());
-			vEcritureComptable.setLibelle("Achat de prestation");
+			manager.addReference(vEcritureComptable);
+			//vEcritureComptable.setLibelle("Achat de prestation");
 			vEcritureComptable.getListLigneEcriture()
 					.add(new LigneEcritureComptable(new CompteComptable(512), null, new BigDecimal(102), null));
 			vEcritureComptable.getListLigneEcriture()
@@ -268,30 +271,29 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 			
 			
 			//ACT : Utilisation de insertEcritureComptable
+			
 			manager.insertEcritureComptable(vEcritureComptable);
 
 		}
 	
-	
-	
-	//Test de upDateEcritureComptable
+	//Test de upDateEcritureComptable avec écriture comptable correcte
 	@Test
-	public void updateEcritureComptableShouldUpdateEcritureComptable() throws FunctionalException {
+	public void updateEcritureComptableShouldUpdateEcritureComptableWhenEcritureComptableIsCorrect() throws FunctionalException {
 		//ARRANGE : Initilisation d'une écriture comptable modifiée à partir d'une écriture comptable existante
 		// Le libellé de la facture a été modifié
 			EcritureComptable vEcritureComptable = new EcritureComptable();
-			vEcritureComptable.setId(-3);
-			vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
+			vEcritureComptable.setId(-5);
+			vEcritureComptable.setJournal(new JournalComptable("BQ","Banque"));
+			vEcritureComptable.setReference("BQ-2016/00005");
 			Calendar cal = Calendar.getInstance();
-			cal.set(2016,12,29);
+			cal.set(2016,11,27);
 			Date date = cal.getTime();
 			vEcritureComptable.setDate(date);
-			vEcritureComptable.setReference("BQ-2016/003");
 			vEcritureComptable.setLibelle("Paiement Facture Emmanuel");
 			vEcritureComptable.getListLigneEcriture()
-					.add(new LigneEcritureComptable(new CompteComptable(401), null, new BigDecimal(52.74), null));
+					.add(new LigneEcritureComptable(new CompteComptable(512), null, new BigDecimal(3000), null));
 			vEcritureComptable.getListLigneEcriture()
-					.add(new LigneEcritureComptable(new CompteComptable(512), null, null, new BigDecimal(52.74)));
+					.add(new LigneEcritureComptable(new CompteComptable(411), null, null, new BigDecimal(3000)));
 			
 		//ACT
 			manager.updateEcritureComptable(vEcritureComptable);
@@ -307,18 +309,53 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 			assertEquals("Paiement Facture Emmanuel",vEcritureComptablePresenteEnBase.getLibelle());	
 	}
 	
+	//Test de upDateEcritureComptable avec écriture comptable incorrecte
+		@Test(expected=FunctionalException.class)
+		public void updateEcritureComptableShouldUpdateEcritureComptableWhenEcritureComptableIsNotCorrect() throws FunctionalException {
+			//ARRANGE : Initilisation d'une écriture comptable modifiée à partir d'une écriture comptable existante
+			// La référence de l'écriture a une chaine nulle
+				EcritureComptable vEcritureComptable = new EcritureComptable();
+				vEcritureComptable.setId(-5);
+				vEcritureComptable.setJournal(new JournalComptable("BQ","Banque"));
+				Calendar cal = Calendar.getInstance();
+				cal.set(2016,11,27);
+				Date date = cal.getTime();
+				//vEcritureComptable.setReference("BQ-2016/00005");
+				//Si référence null alors NullPointerException
+				vEcritureComptable.setReference("");
+				vEcritureComptable.setLibelle("Paiement facture Emmanuel");
+				vEcritureComptable.setDate(date);
+				vEcritureComptable.getListLigneEcriture()
+						.add(new LigneEcritureComptable(new CompteComptable(512), null, new BigDecimal(3000), null));
+				vEcritureComptable.getListLigneEcriture()
+						.add(new LigneEcritureComptable(new CompteComptable(411), null, null, new BigDecimal(3000)));
+				
+			//ACT
+				manager.updateEcritureComptable(vEcritureComptable);
+				
+			//ASSERT
+				EcritureComptable vEcritureComptablePresenteEnBase = null;
+				List<EcritureComptable> listEcritureComptable=manager.getListEcritureComptable();
+				for(EcritureComptable ecritureComptable: listEcritureComptable) {
+					if(ecritureComptable.getId().equals(vEcritureComptable.getId())) {
+						vEcritureComptablePresenteEnBase=ecritureComptable;
+					}
+				}
+				assertEquals("Paiement Facture Emmanuel",vEcritureComptablePresenteEnBase.getLibelle());	
+		}
+	
 	
 	//Test de DeleteEcritureComptable
 	@Test
 	public void deleteEcritureComptableShouldDeleteEcritureComptable() {			
 			//ACT : suppression de l'écriture comptable en base ayant l'id -5
-			manager.deleteEcritureComptable(-5);
+			manager.deleteEcritureComptable(-3);
 		
 			//ASSERT : vérification de la suppression
 			Boolean vEcritureComptablePresenteEnBase=false;
 			List<EcritureComptable> listEcritureComptable=manager.getListEcritureComptable();
 			for(EcritureComptable ecritureComptable: listEcritureComptable) {
-				if(ecritureComptable.getId().equals(-5)) {
+				if(ecritureComptable.getId().equals(-3)) {
 					vEcritureComptablePresenteEnBase=true;
 				}
 			}
