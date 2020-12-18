@@ -85,9 +85,6 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
      		throw new NotFoundException("SequenceEcritureComptable inexistante");
      	}
     	return vBean;
-    	
-          
-    	
     }
     
     /** SQLinsertSequenceEcritureComptable */
