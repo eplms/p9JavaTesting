@@ -63,6 +63,7 @@
         <module>myerp-model</module>
         <module>myerp-consumer</module>
         <module>myerp-business</module>
+    <module>myerp-aggregator</module>
   </modules>
 
 

@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  	<modelVersion>4.0.0</modelVersion>
+  	<parent>
+    	<groupId>com.dummy.myerp</groupId>
+    	<artifactId>myerp</artifactId>
+    	<version>1.x.x-SNAPSHOT</version>
+  	</parent>
+  
+  <groupId>com.dummy.myerp</groupId>
+  
+  <artifactId>myerp-aggregator</artifactId>
+  
+  <version>1.x.x-SNAPSHOT</version>
+  
+  <name>myerp-aggregator</name>
+  <url>http://maven.apache.org</url>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  
+  <dependencies>
+    	<dependency>
+      		<groupId>junit</groupId>
+    		<artifactId>junit</artifactId>
+      		<version>3.8.1</version>
+      		<scope>test</scope>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.dummy.myerp</groupId>
+    		<artifactId>myerp-business</artifactId>
+    		<version>${project.version}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.dummy.myerp</groupId>
+    		<artifactId>myerp-model</artifactId>
+    		<version>${project.version}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.dummy.myerp</groupId>
+    		<artifactId>myerp-consumer</artifactId>
+    		<version>${project.version}</version>
+    	</dependency>
+    	
+    	<dependency>
+    		<groupId>com.dummy.myerp</groupId>
+    		<artifactId>myerp-technical</artifactId>
+    		<version>${project.version}</version>
+    	</dependency>
+  
+  </dependencies>
+  
+  <build>
+	  <plugins>
+	  		<plugin>
+	        	<groupId>org.jacoco</groupId>
+	            <artifactId>jacoco-maven-plugin</artifactId>
+	            <version>0.8.6</version>
+	            <executions>
+	            	<execution>
+	                	<goals>
+	                    	<goal>prepare-agent</goal>
+	                    </goals>
+	               </execution>
+	               <execution>
+	                     <id>report-aggregate</id>
+	                     <phase>verify</phase>
+		                 <goals>
+		                 	<goal>report-aggregate</goal>
+	                   	</goals>
+	                    <configuration>
+	                    	<dataFileIncludes>
+	                        	<dataFileInclude>**/jacoco.exec</dataFileInclude>
+	                        </dataFileIncludes>
+	                        <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
+	                    </configuration>
+	                 </execution>
+	             </executions>
+	           </plugin>
+	           <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-surefire-plugin</artifactId>
+	                <version>3.0.0-M5</version>
+	                <configuration>
+	                    <systemPropertyVariables>
+	                        <jacoco-agent.destfile>**/jacoco.exec</jacoco-agent.destfile>
+	                    </systemPropertyVariables>
+	                </configuration>
+	            </plugin> 
+	  	</plugins>
+  	</build>
+</project>
