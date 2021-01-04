@@ -89,7 +89,7 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 		// ACT : L'écriture comptable est passée dans la méthode addReference
 		manager.addReference(vEcritureComptable);
 		// ASSERT : Vérification que la référence a bien été ajoutée à l'écriture comptable
-		assertEquals("VE-2020/00001",vEcritureComptable.getReference());
+		assertEquals("VE-2021/00001",vEcritureComptable.getReference());
 	}
 	
 	// Test de checkEcritureComptable avec une écriture comptable comportant une référence existante sans id
@@ -182,10 +182,10 @@ public class ComptabiliteIntegrationTest extends BusinessTestCase {
 	// Test de checkEcritureComptable avec une écriture comptable ayant une référence qui n'existe pas encore en base
 	@Test
 	public void checkEcritureComptableShouldNotThrowExceptionWhenReferenceEcritureComptableIsDifferent() throws Exception{
-		//ARRANGE : Initialisation d'une écriture ne comportant pas de référence
+		//ARRANGE : Initialisation d'une écriture ne comportant pas de référence existante en base
 		EcritureComptable vEcritureComptable = new EcritureComptable();
 		vEcritureComptable.setJournal(new JournalComptable("VE", "Vente"));
-		vEcritureComptable.setReference("VE-2020/00001");
+		vEcritureComptable.setReference("VE-2021/00001");
 		vEcritureComptable.setDate(new Date());
 		vEcritureComptable.setLibelle("Achat de papeterie");
 		vEcritureComptable.getListLigneEcriture()
