@@ -19,7 +19,7 @@ public class ComptabiliteManagerImplTest {
 		EcritureComptable vEcritureComptable;
 		vEcritureComptable = new EcritureComptable();
 		vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
-		vEcritureComptable.setReference("AC-2020/00001");
+		vEcritureComptable.setReference("AC-2021/00001");
 		vEcritureComptable.setDate(new Date());
 		vEcritureComptable.setLibelle("Libelle");
 		vEcritureComptable.getListLigneEcriture()
